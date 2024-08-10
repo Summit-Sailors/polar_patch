@@ -1,0 +1,6 @@
+libcst==1.4.0
+mypy==1.11.1
+mypy-extensions==1.0.0
+polars==1.4.1
+PyYAML==6.0.2
+typing_extensions==4.12.2
