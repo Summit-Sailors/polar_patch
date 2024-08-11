@@ -5,7 +5,7 @@ import libcst.matchers as m
 import logging
 from typing import List
 
-# Logging setup
+# logging setup
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
@@ -15,46 +15,44 @@ class ASTModifier(cst.CSTTransformer):
         self.modified_functions = []
 
     def leave_FunctionDef(self, original_node: cst.FunctionDef, updated_node: cst.FunctionDef) -> cst.FunctionDef:
-         # modify function definitions that have known Polars decorators
-        if original_node.name.value in self.known_plugins:
-            logger.info(f"Modifying function: {original_node.name.value}")
-            modified_node = self._add_type_annotations(updated_node)
-            self.modified_functions.append(original_node.name.value)
-            return modified_node
+        # modify function definitions that have known Polars decorators
+        for decorator in original_node.decorators:
+            # handle both simple names and attributes in decorators
+            decorator_name = None
+            if isinstance(decorator.decorator, cst.Name):
+                decorator_name = decorator.decorator.value
+            elif isinstance(decorator.decorator, cst.Attribute):
+                decorator_name = decorator.decorator.attr.value
+
+            if decorator_name in self.known_plugins:
+                logger.info(f"Modifying function: {original_node.name.value}")
+                modified_node = self._add_type_annotations(updated_node)
+                self.modified_functions.append(original_node.name.value)
+                return modified_node
+
         return updated_node
 
-    # should be tailored to match the specific types used in a codebase
     def _add_type_annotations(self, node: cst.FunctionDef) -> cst.FunctionDef:
         logger.info(f"Adding type annotations to function: {node.name.value}")
-        # example specific return type
-        return_type = cst.Annotation(annotation=cst.Name("Union[str, int]"))
+
+        # adding 'int' annotation to parameters and return type (POC)
+        updated_params = [
+            param.with_changes(
+                annotation=cst.Annotation(annotation=cst.Name("int"))
+            ) for param in node.params.params
+        ]
+
+        # add 'int' return type annotation if not present
+        return_type = cst.Annotation(annotation=cst.Name("int"))
+        if node.returns is None:
+            node = node.with_changes(
+                returns=return_type
+            )
         
-        # annotate parameters with example types
-        parameters = []
-        for param in node.params.params:
-            param_name = param.name.value
-            param_annotation = cst.Annotation(annotation=cst.Name("Any"))  # default to Any
-            if param.default is not None:
-                param_annotation = cst.Annotation(annotation=cst.Name("Optional[Any]"))
-            elif param_name == 'df':
-                param_annotation = cst.Annotation(annotation=cst.Name("DataFrame"))  # example for a DataFrame
-            elif param_name == 'value':
-                param_annotation = cst.Annotation(annotation=cst.Name("int"))  # example for an int parameter
-            elif param_name == 'name':
-                param_annotation = cst.Annotation(annotation=cst.Name("str"))  # example for a str parameter
-            parameters.append(param.with_changes(annotation=param_annotation))
-
-        # update return type
-        updated_node = node.with_changes(
-            params=node.params.with_changes(params=parameters),
-            returns=return_type
-        )
-
-        logger.info(f"Added type annotations to function: {node.name.value}")
-        return updated_node
+        return node.with_changes(params=cst.Parameters(params=updated_params))
 
     def modify_ast(self, code: str) -> str:
-        # Parse the code and modify the AST based on known Polars decorators
+        # parse the code and modify the AST based on known Polars decorators
         try:
             logger.info("Starting AST modification...")
             module = cst.parse_module(code)
@@ -66,7 +64,7 @@ class ASTModifier(cst.CSTTransformer):
             return code
 
 def modify_code(code: str, known_plugins: List[str]) -> str:
-    # Helper function to modify the AST of the provided code
+    # helper function to modify the AST of the provided code
     modifier = ASTModifier(known_plugins)
     return modifier.modify_ast(code)
 
