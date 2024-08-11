@@ -1,0 +1,20 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "Config Schema",
+  "type": "object",
+  "properties": {
+    "decorators": {
+      "type": "object",
+      "properties": {
+        "custom_function": {
+          "type": "boolean"
+        },
+        "another_plugin": {
+          "type": "boolean"
+        }
+      },
+      "required": ["custom_function", "another_plugin"]
+    }
+  },
+  "required": ["decorators"]
+}
