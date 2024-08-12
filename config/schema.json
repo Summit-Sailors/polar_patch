@@ -13,8 +13,71 @@
           "type": "boolean"
         }
       },
-      "required": ["custom_function", "another_plugin"]
+      "required": [
+        "custom_function",
+        "another_plugin"
+      ]
+    },
+    "parameter_names": {
+      "type": "object",
+      "properties": {
+        "int_keywords": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "str_keywords": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "bool_keywords": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      },
+      "required": [
+        "int_keywords",
+        "str_keywords",
+        "bool_keywords"
+      ]
+    },
+    "default_values": {
+      "type": "object",
+      "properties": {
+        "int_defaults": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "float_defaults": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "str_defaults": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      },
+      "required": [
+        "int_defaults",
+        "float_defaults",
+        "str_defaults"
+      ]
     }
   },
-  "required": ["decorators"]
+  "required": [
+    "decorators",
+    "parameter_names",
+    "default_values"
+  ]
 }

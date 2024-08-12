@@ -2,6 +2,7 @@
 
 import unittest
 import logging
+
 from modules.ast_modifier import modify_code
 from modules.utils import load_known_decorators
 
@@ -9,7 +10,7 @@ class TestASTModifier(unittest.TestCase):
     
     def setUp(self):
         # load known plugins from the config file
-        self.known_plugins = list(load_known_decorators('config/config.toml', logging.getLogger(__name__)))
+        self.known_plugins = list(load_known_decorators(logging.getLogger(__name__)))
         print(f"Loaded known plugins: {self.known_plugins}")
     
     def test_modify_plugin_function(self):
@@ -25,7 +26,7 @@ def my_plugin(df):
 import polars as pl
 
 @pl.api.custom_function
-def my_plugin(df: int) -> int:
+def my_plugin(df: Any) -> Any:
     return df
 """
         modified_code = modify_code(code, self.known_plugins)
@@ -66,7 +67,7 @@ def my_plugin(df, value, name="default"):
 import polars as pl
 
 @pl.api.custom_function
-def my_plugin(df: int, value: int, name: int="default") -> int:
+def my_plugin(df: Any, value: Any, name: str="default") -> Any:
     return df
 """
         modified_code = modify_code(code, self.known_plugins)

@@ -1,3 +1,13 @@
 [decorators]
 custom_function = true
 another_plugin = true
+
+[parameter_names]
+int_keywords = ["count", "index", "number", "size"]
+str_keywords = ["name", "title", "label", "description"]
+bool_keywords = ["is_", "has_", "can_", "should_"]
+
+[default_values]
+int_defaults = ["1", "2", "3"]
+float_defaults = ["1.0", "2.0", "3.0"]
+str_defaults = ["'example'", '"example"']

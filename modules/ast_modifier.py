@@ -1,18 +1,20 @@
 # modules/ast_modifier.py
 
 import libcst as cst
-import libcst.matchers as m
 import logging
 from typing import List
+
+from modules.utils import infer_type_from_default, infer_type_from_name
 
 # logging setup
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
 class ASTModifier(cst.CSTTransformer):
-    def __init__(self, known_plugins: List[str]):
+    def __init__(self, known_plugins: List[str], default_type: str = "Any"):
         self.known_plugins = known_plugins
         self.modified_functions = []
+        self.default_type = default_type # default type for dynamic annotations
 
     def leave_FunctionDef(self, original_node: cst.FunctionDef, updated_node: cst.FunctionDef) -> cst.FunctionDef:
         # modify function definitions that have known Polars decorators
@@ -34,22 +36,38 @@ class ASTModifier(cst.CSTTransformer):
 
     def _add_type_annotations(self, node: cst.FunctionDef) -> cst.FunctionDef:
         logger.info(f"Adding type annotations to function: {node.name.value}")
+        updated_params = []
 
-        # adding 'int' annotation to parameters and return type (POC)
-        updated_params = [
-            param.with_changes(
-                annotation=cst.Annotation(annotation=cst.Name("int"))
-            ) for param in node.params.params
-        ]
+        for param in node.params.params:
+            # only add annotation if it doesn't already exist
+            if param.annotation is None:
+                param_type = self._determine_param_type(param)
+                updated_params.append(
+                    param.with_changes(annotation=cst.Annotation(annotation=cst.Name(param_type)))
+                )
+            else:
+                updated_params.append(param)
 
-        # add 'int' return type annotation if not present
-        return_type = cst.Annotation(annotation=cst.Name("int"))
+        # add return type annotation if not present
         if node.returns is None:
-            node = node.with_changes(
-                returns=return_type
-            )
-        
+            return_type = cst.Annotation(annotation=cst.Name(self.default_type))
+            node = node.with_changes(returns=return_type)
+
         return node.with_changes(params=cst.Parameters(params=updated_params))
+    
+    def _determine_param_type(self, param: cst.Param) -> str:
+        """Determine the type of the parameter using configuration-based inference."""
+        if param.default:
+            inferred_type = infer_type_from_default(param.default)
+            if inferred_type:
+                return inferred_type
+        
+        inferred_type = infer_type_from_name(param.name.value)
+        if inferred_type:
+            return inferred_type
+        
+        return self.default_type  # fallback to a default type if no inference is possible
+
 
     def modify_ast(self, code: str) -> str:
         # parse the code and modify the AST based on known Polars decorators
