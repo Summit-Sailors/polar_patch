@@ -2,7 +2,7 @@ import unittest
 import subprocess
 from unittest.mock import patch, MagicMock, mock_open, call
 from pathlib import Path
-from modules.monkey_patcher import PolarsMonkeyPatcher
+from polar_patch.monkey_patcher import PolarsMonkeyPatcher
 
 class TestPolarsMonkeyPatcher(unittest.TestCase):
     

@@ -4,8 +4,8 @@ import shutil
 import subprocess
 from pathlib import Path
 
-from modules.plugin_scanner import scan_plugins_in_code
-from modules.ast_modifier import modify_code
+from polar_patch.plugin_scanner import scan_plugins_in_code
+from polar_patch.ast_modifier import modify_code
 
 # set up logging
 logging.basicConfig(level=logging.INFO)

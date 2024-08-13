@@ -3,8 +3,8 @@
 import unittest
 import logging
 
-from modules.ast_modifier import modify_code
-from modules.utils import load_known_decorators
+from polar_patch.ast_modifier import modify_code
+from polar_patch.utils import load_known_decorators
 
 class TestASTModifier(unittest.TestCase):
     

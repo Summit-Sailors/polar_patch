@@ -1,7 +1,7 @@
 # tests/test_plugin_scanner.py
 
 import unittest
-from modules.plugin_scanner import scan_plugins_in_code
+from polar_patch.plugin_scanner import scan_plugins_in_code
 
 class TestPluginScanner(unittest.TestCase):
     def test_basic_detection(self):

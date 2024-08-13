@@ -3,7 +3,7 @@ import libcst.matchers as m
 import logging
 from typing import Optional, Set, List
 
-from modules.utils import load_known_decorators
+from polar_patch.utils import load_known_decorators
 
 # set up logging
 logging.basicConfig(level=logging.INFO)

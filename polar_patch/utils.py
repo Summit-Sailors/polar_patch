@@ -37,7 +37,7 @@ def infer_type_from_default(default_value):
     return None
 
 def infer_type_from_name(name):
-    """infer the type from the parameter name using configuration. (Heuristcs-based inference)"""
+    """Infer the type from the parameter name using configuration (Heuristic-based inference)."""
     if any(keyword in name for keyword in config['parameter_names']['int_keywords']):
         return "int"
     elif any(keyword in name for keyword in config['parameter_names']['str_keywords']):

@@ -4,7 +4,7 @@ import libcst as cst
 import logging
 from typing import List
 
-from modules.utils import infer_type_from_default, infer_type_from_name
+from polar_patch.utils import infer_type_from_default, infer_type_from_name
 
 # logging setup
 logging.basicConfig(level=logging.INFO)
@@ -88,7 +88,7 @@ def modify_code(code: str, known_plugins: List[str]) -> str:
 
 # Example testing
 if __name__ == "__main__":
-    from modules.plugin_scanner import scan_plugins_in_code
+    from polar_patch.plugin_scanner import scan_plugins_in_code
     
     sample_code = """
 import polars as pl
