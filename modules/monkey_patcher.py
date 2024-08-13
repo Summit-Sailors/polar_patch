@@ -1,6 +1,7 @@
 import importlib
 import logging
 import shutil
+import subprocess
 from pathlib import Path
 
 from modules.plugin_scanner import scan_plugins_in_code
@@ -11,9 +12,10 @@ logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
 class PolarsMonkeyPatcher:
-    def __init__(self, polars_module_name='polars', backup_dir='backup'):
+    def __init__(self, polars_module_name='polars', backup_dir='backup', package_manager='rye'):
         self.polars_module_name = polars_module_name
         self.backup_dir = Path(backup_dir)
+        self.package_manager = package_manager
 
     def _get_polars_path(self) -> Path:
         # locate the Polars library in the site-packages directory
@@ -75,8 +77,12 @@ class PolarsMonkeyPatcher:
                     self._patch_file(py_file, plugins)
 
             logger.info("Patching complete.")
+        except ModuleNotFoundError as e:
+            logger.error(f"Failed to apply patches: {e}")
+            raise
         except Exception as e:
             logger.error(f"Failed to apply patches: {e}")
+
 
     def restore_backup(self):
         """Restore the original Polars library from the backup."""
@@ -94,7 +100,30 @@ class PolarsMonkeyPatcher:
         except Exception as e:
             logger.error(f"Failed to restore Polars library: {e}")
 
+    def uninstall_polars(self):
+        """Uninstall the Polars library using the specified package manager."""
+        try:
+            logger.info(f"Uninstalling Polars using {self.package_manager}...")
+            subprocess.run([self.package_manager, "remove", "polars-lts-cpu"], check=True)
+            logger.info("Polars uninstalled successfully.")
+        except subprocess.CalledProcessError as e:
+            logger.error(f"Failed to uninstall Polars: {e}")
+            raise
+
+    def reinstall_polars(self):
+        """Reinstall the Polars library using the specified package manager."""
+        try:
+            logger.info(f"Reinstalling Polars using {self.package_manager}...")
+            subprocess.run([self.package_manager, "install", "polars-lts-cpu"], check=True)
+            logger.info("Polars reinstalled successfully.")
+        except subprocess.CalledProcessError as e:
+            logger.error(f"Failed to reinstall Polars: {e}")
+            raise
+
 # Example usage
 if __name__ == "__main__":
     patcher = PolarsMonkeyPatcher()
     patcher.apply_patches()
+    # for resetting Polars, use:
+    # patcher.uninstall_polars()
+    # patcher.reinstall_polars()
