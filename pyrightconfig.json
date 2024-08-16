@@ -1,0 +1,53 @@
+{
+  "pythonVersion": "3.12",
+  "pythonPlatform": "Linux",
+
+  "exclude": ["**/node_modules", "**/__pycache__", "./apps", "./packages"],
+  "include": ["src"],
+  "typeCheckingMode": "strict",
+  "reportTypesImportCycles": "error",
+  "extraPaths": ["src", "src/typings"],
+  "verboseOutput": true,
+  "autoSearchPaths": true,
+  "useLibraryCodeForTypes": true,
+
+  "reportMissingImports": true,
+  "reportMissingTypeStubs": false,
+  "strictListInference": true,
+  "strictDictionaryInference": true,
+  "strictParameterNoneValue": true,
+  "reportImportCycles": "warning",
+  "reportWildcardImportFromLibrary": "warning",
+
+  "reportUnusedImport": "warning",
+  "reportUnusedClass": "warning",
+  "reportUnusedFunction": "warning",
+  "reportUnusedVariable": "warning",
+  "reportUnusedExpression": false,
+
+  "reportOptionalSubscript": "warning",
+  "reportOptionalOperand": "warning",
+  "reportOptionalCall": "warning",
+  "reportOptionalIterable": "warning",
+  "reportOptionalMemberAccess": "warning",
+  "reportOptionalContextManager": "warning",
+
+  "reportUnknownParameterType": "warning",
+  "reportUnknownArgumentType": "warning",
+  "reportUnknownLambdaType": "warning",
+  "reportUnknownVariableType": "warning",
+  "reportUnknownMemberType": "warning",
+
+  "reportPrivateUsage": "warning",
+  "reportConstantRedefinition": "warning",
+  "reportIncompatibleMethodOverride": "warning",
+  "reportIncompatibleVariableOverride": "warning",
+  "reportOverlappingOverload": "warning",
+  "reportMissingTypeArgument": "warning",
+  "reportCallInDefaultInitializer": "warning",
+  "reportUnnecessaryIsInstance": "warning",
+  "reportUnnecessaryCast": "warning",
+  "reportAssertAlwaysTrue": "warning",
+  "reportImplicitStringConcatenation": "warning",
+  "reportUnusedCallResult": false
+}
