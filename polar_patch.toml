@@ -1,0 +1,3 @@
+[polar_patch]
+python_interpreter = "/usr/bin/python3"
+scan_paths = ["src/", "tests/"]
