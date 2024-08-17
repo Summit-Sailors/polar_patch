@@ -7,7 +7,6 @@ import libcst.matchers as m
 
 from src.polars_classes import POLARS_NAMESPACE_DECORATORS, POLARS_NAMESPACE_TO_DECORATOR
 
-logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
 

@@ -1,0 +1,56 @@
+{
+  "name": "polar-patch",
+  "displayName": "Polar Patch",
+  "description": "VSCode extension to provide JSON schema validation for Polar Patch TOML configuration files.",
+  "version": "0.0.1",
+  "publisher": "summit-sailors",
+  "license": "MIT",
+  "icon": "icon.png",
+  "engines": {
+    "vscode": "^1.92.0"
+  },
+  "keywords": [
+    "TOML",
+    "schema",
+    "validation",
+    "Polar Patch"
+  ],
+  "categories": [
+    "Data Science",
+    "Formatters",
+    "Other"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Phronetic-Horizons/polar_patch"
+  },
+  "contributes": {
+    "tomlValidation": [
+      {
+        "regexMatch": "polar_patch.toml",
+        "url": "./extension/polar_patch_schema.json"
+      }
+    ]
+  },
+  "scripts": {
+    "vscode:prepublish": "pnpm run compile",
+    "compile": "tsc -p ./",
+    "watch": "tsc -watch -p ./",
+    "package": "vsce package",
+    "publish": "vsce publish"
+  },
+  "devDependencies": {
+    "@types/node": "22.4.0",
+    "@types/vscode": "1.92.0",
+    "@vscode/vsce": "3.0.0",
+    "@typescript-eslint/eslint-plugin": "8.1.0",
+    "@typescript-eslint/parser": "8.1.0",
+    "eslint": "9.9.0",
+    "eslint-plugin-node": "11.1.0",
+    "typescript": "5.5.4",
+    "htmlhint": "1.1.4",
+    "prettier": "3.3.3",
+    "prettier-plugin-tailwindcss": "0.6.6",
+    "stylelint": "16.8.2"
+  }
+}

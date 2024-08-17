@@ -165,8 +165,5 @@
   "autoimport.doubleQuotes": true,
   // "npm-intellisense.importQuotes": "\"",
   "javascript.preferences.quoteStyle": "double",
-  "typescript.preferences.quoteStyle": "double",
-  "toml.schemas": {
-    "./schemas/polar_patch_schema.json": "*/polar_patch.toml"
-  }
+  "typescript.preferences.quoteStyle": "double"
 }
