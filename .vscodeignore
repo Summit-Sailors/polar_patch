@@ -1,4 +1,14 @@
 node_modules
-.vscode-test
-out/test
-src/test
+.venv
+src/
+tests/
+.editorconfig
+.gitignore
+.python-version
+justfile
+MANIFEST.in
+polar_patch.toml
+pyproject.toml
+pyrightconfig.json
+*.lock
+taplo.toml

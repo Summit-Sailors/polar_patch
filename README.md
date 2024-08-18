@@ -21,5 +21,3 @@ from polar_patch import apply_patches
 apply_patches()
 
 ```
-
-

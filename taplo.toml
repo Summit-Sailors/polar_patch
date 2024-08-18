@@ -2,5 +2,5 @@ include = ["**/*.toml"]
 
 [formatting]
 column_width = 160
-reorder_keys=true
-reorder_arrays=true
+reorder_arrays = true
+reorder_keys = true

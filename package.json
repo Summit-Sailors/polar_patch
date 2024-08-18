@@ -5,7 +5,7 @@
   "version": "0.0.1",
   "publisher": "summit-sailors",
   "license": "MIT",
-  "icon": "icon.png",
+  "icon": "icon.ico",
   "engines": {
     "vscode": "^1.92.0"
   },
@@ -24,33 +24,41 @@
     "type": "git",
     "url": "https://github.com/Phronetic-Horizons/polar_patch"
   },
+  "activationEvents": [
+    "onLanguage:toml"
+  ],
+  "main": "./dist/extension.js",
   "contributes": {
     "tomlValidation": [
       {
-        "regexMatch": "polar_patch.toml",
+        "regexMatch": "^.*polar_patch.toml$",
         "url": "./extension/polar_patch_schema.json"
       }
     ]
   },
   "scripts": {
-    "vscode:prepublish": "pnpm run compile",
-    "compile": "tsc -p ./",
-    "watch": "tsc -watch -p ./",
-    "package": "vsce package",
-    "publish": "vsce publish"
+    "compile": "webpack",
+    "tsc": "tsc --noEmit",
+    "package": "webpack --mode production --devtool source-map --config ./webpack.config.js",
+    "watch": "webpack --watch",
+    "vsce-package": "vsce package -o polar_patch.vsix --no-dependencies",
+    "vscode:prepublish": "pnpm run package"
   },
   "devDependencies": {
     "@types/node": "22.4.0",
-    "@types/vscode": "1.92.0",
-    "@vscode/vsce": "3.0.0",
     "@typescript-eslint/eslint-plugin": "8.1.0",
     "@typescript-eslint/parser": "8.1.0",
+    "@vscode/vsce": "3.0.0",
+    "copy-webpack-plugin": "^12.0.2",
     "eslint": "9.9.0",
     "eslint-plugin-node": "11.1.0",
-    "typescript": "5.5.4",
     "htmlhint": "1.1.4",
     "prettier": "3.3.3",
     "prettier-plugin-tailwindcss": "0.6.6",
-    "stylelint": "16.8.2"
+    "stylelint": "16.8.2",
+    "ts-loader": "^9.5.1",
+    "typescript": "5.5.4",
+    "webpack": "^5.93.0",
+    "webpack-cli": "^5.1.4"
   }
 }
