@@ -30,7 +30,7 @@ class PolarsPatcher(MatcherDecoratableTransformer):
     for ns in self.polars_namespace_to_plugins:
       file_path = Path(inspect.getfile(getattr(polars_module, ns)))
       new_code = cst.parse_module(file_path.read_text()).visit(self).code
-      Path(f"./{ns}.py").write_text(new_code)
+      file_path.write_text(new_code)
 
   @m.leave(m.ClassDef(name=m.Name(value=m.MatchIfTrue(lambda name: name in POLARS_NAMESPACES))))
   def add_attributes(self, original_node: cst.ClassDef, updated_node: cst.ClassDef) -> cst.ClassDef:
