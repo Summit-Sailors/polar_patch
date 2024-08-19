@@ -1,0 +1,14 @@
+node_modules
+.venv
+polar_patch/
+tests/
+.editorconfig
+.gitignore
+.python-version
+justfile
+MANIFEST.in
+polar_patch.toml
+pyproject.toml
+pyrightconfig.json
+*.lock
+taplo.toml

@@ -1,3 +1,0 @@
-include config/*.toml
-include config/*.json
-recursive-include tests *

@@ -1,8 +1,0 @@
-libcst==1.4.0
-mypy==1.11.1
-mypy-extensions==1.0.0
-polars-lts-cpu==1.4.1
-PyYAML==6.0.2
-setuptools==72.1.0
-toml==0.10.2
-typing_extensions==4.12.2

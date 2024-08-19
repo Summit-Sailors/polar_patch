@@ -1,0 +1,169 @@
+{
+  "[html]": {
+    "editor.defaultFormatter": "vscode.html-language-features"
+  },
+  "[graphql][typescript][javascript][javascriptreact][typescriptreact]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode",
+    "editor.tabSize": 2,
+    "editor.codeActionsOnSave": {
+      "source.fixAll.eslint": "explicit",
+      "source.organizeImports": "explicit",
+      "source.sortPackageJson": "explicit"
+    }
+  },
+  "material-icon-theme.activeIconPack": "react_redux",
+  "[json][jsonc]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode",
+    "editor.tabSize": 2
+  },
+  "[python]": {
+    "editor.codeActionsOnSave": {
+      "source.fixAll": "always",
+      "source.fixAll.ruff": "always",
+      "source.organizeImports.ruff": "always"
+    },
+    "editor.defaultFormatter": "charliermarsh.ruff",
+    "editor.tabSize": 2,
+    "editor.formatOnSave": true,
+    "editor.insertSpaces": true
+  },
+  "[toml]": {
+    "editor.defaultFormatter": "tamasfe.even-better-toml"
+  },
+  "editor.bracketPairColorization.independentColorPoolPerBracketType": false,
+
+  "editor.defaultFormatter": "esbenp.prettier-vscode",
+  "editor.detectIndentation": true,
+  "editor.formatOnSave": true,
+  "editor.linkedEditing": true,
+  "editor.rulers": [160],
+  "editor.suggestSelection": "first",
+  "editor.tabSize": 2,
+  "emmet.includeLanguages": {
+    "javascript": "javascriptreact"
+  },
+  "eslint.workingDirectories": [
+    {
+      "mode": "auto"
+    }
+  ],
+  "files.associations": {
+    "*.tsx": "typescriptreact"
+  },
+  "files.autoSave": "onFocusChange",
+  "files.autoSaveDelay": 300000,
+  "files.eol": "\n",
+  "git.autofetch": true,
+  "indentRainbow.colors": ["rgba(34, 34, 34, 1)", "rgba(17, 17, 17, 1)"],
+  "indentRainbow.ignoreErrorLanguages": ["python", "docker"],
+  "javascript.format.insertSpaceAfterConstructor": true,
+  "javascript.format.insertSpaceAfterOpeningAndBeforeClosingEmptyBraces": false,
+  "javascript.format.insertSpaceAfterOpeningAndBeforeClosingJsxExpressionBraces": false,
+  "javascript.format.insertSpaceAfterOpeningAndBeforeClosingNonemptyBraces": true,
+  "javascript.format.insertSpaceAfterOpeningAndBeforeClosingNonemptyBrackets": false,
+  "javascript.updateImportsOnFileMove.enabled": "always",
+  "jupyter.askForKernelRestart": false,
+  "liveServer.settings.donotShowInfoMsg": true,
+  // "material-icon-theme.activeIconPack": "react_redux",
+  "material-icon-theme.files.associations": {
+    ".env.*": "tune",
+    "*compose.*.yml": "docker",
+    "*.docker": "docker"
+  },
+  "material-icon-theme.folders.associations": {
+    "just": "just"
+  },
+  "notebook.cellToolbarLocation": {
+    "default": "right",
+    "jupyter-notebook": "left"
+  },
+
+  "notebook.codeActionsOnSave": {
+    "notebook.formatOnSave.enabled": "explicit",
+    "notebook.source.fixAll": "explicit",
+    "notebook.source.organizeImports": "explicit"
+  },
+  "notebook.editorOptionsCustomizations": {
+    "editor.codeActionsOnSave": {
+      "source.fixAll": "always",
+      "source.fixAll.ruff": "always",
+      "source.organizeImports.ruff": "always"
+    },
+    "editor.defaultFormatter": "charliermarsh.ruff",
+    "editor.tabSize": 2,
+    "editor.formatOnSave": true,
+    "editor.insertSpaces": true
+  },
+  "jupyter.themeMatplotlibPlots": true,
+  "notebook.experimental.variablesView": true,
+  "prettier.bracketSpacing": true,
+  "prettier.printWidth": 160,
+  "prettier.semi": false,
+  "python.analysis.autoFormatStrings": true,
+  "python.analysis.autoImportCompletions": true,
+  "python.analysis.completeFunctionParens": false,
+  "python.analysis.exclude": [
+    "**/node_modules",
+    "**/__pycache__",
+    ".git",
+    "**/.venv/**",
+    "**/.*"
+  ],
+  "python.analysis.indexing": true,
+  "python.analysis.packageIndexDepths": [
+    {
+      "name": "",
+      "depth": 5
+    }
+  ],
+  "python.analysis.typeCheckingMode": "strict",
+  "python.analysis.inlayHints.callArgumentNames": "partial",
+  "python.analysis.inlayHints.functionReturnTypes": true,
+  "python.analysis.inlayHints.variableTypes": true,
+  "python.analysis.logLevel": "Warning",
+  "python.analysis.persistAllIndices": true,
+  "python.analysis.userFileIndexingLimit": -1,
+  "python.analysis.include": ["${workspaceFolder}"],
+  "python.analysis.extraPaths": ["${workspaceFolder}"],
+  "python.defaultInterpreterPath": ".venv/bin/python",
+  "python.languageServer": "Pylance",
+  "python.terminal.activateEnvironment": true,
+  "python.testing.autoTestDiscoverOnSaveEnabled": false,
+  "ruff.format.args": ["--config=${workspaceFolder}/pyproject.toml"],
+  "ruff.importStrategy": "fromEnvironment",
+  "ruff.lint.args": ["--config=${workspaceFolder}/pyproject.toml"],
+  "ruff.showNotifications": "onError",
+  "typescript.format.insertSpaceAfterOpeningAndBeforeClosingEmptyBraces": false,
+  "typescript.format.insertSpaceAfterOpeningAndBeforeClosingJsxExpressionBraces": false,
+  "typescript.format.insertSpaceAfterOpeningAndBeforeClosingNonemptyBraces": true,
+  "typescript.format.insertSpaceAfterOpeningAndBeforeClosingNonemptyBrackets": false,
+  "typescript.preferences.importModuleSpecifier": "relative",
+  "typescript.updateImportsOnFileMove.enabled": "always",
+  "workbench.activityBar.location": "top",
+  "workbench.editor.wrapTabs": true,
+  "workbench.editorAssociations": {
+    "*.ipynb": "jupyter-notebook",
+    "*.py": "default"
+  },
+  "workbench.iconTheme": "material-icon-theme",
+  "workbench.startupEditor": "none",
+  "files.exclude": {
+    "**/.git": true,
+    "**/.svn": true,
+    "**/.hg": true,
+    "**/CVS": true,
+    "**/.DS_Store": true,
+    "**/Thumbs.db": true,
+    ".eslintignore": true,
+    ".mypy_cache": true,
+    ".eslintrc.js": true
+  },
+  "explorerExclude.backup": {},
+  "[dockerfile]": {
+    "editor.defaultFormatter": "ms-azuretools.vscode-docker"
+  },
+  "autoimport.doubleQuotes": true,
+  // "npm-intellisense.importQuotes": "\"",
+  "javascript.preferences.quoteStyle": "double",
+  "typescript.preferences.quoteStyle": "double"
+}

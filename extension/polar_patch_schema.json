@@ -1,0 +1,26 @@
+{
+  "$schema": "http://json-schema.org/draft-04/schema#",
+  "title": "Polar Patch Configuration",
+  "type": "object",
+  "properties": {
+    "polar_patch": {
+      "type": "object",
+      "properties": {
+        "python_interpreter": {
+          "type": "string",
+          "description": "Path to the Python interpreter.",
+          "x-taplo": { "docs": { "main": "This specifies the path to the Python interpreter that should be used." } }
+        },
+        "scan_paths": {
+          "type": "array",
+          "description": "List of paths to scan.",
+          "items": { "type": "string" },
+          "x-taplo": { "docs": { "main": "This is a list of paths that will be scanned by the tool." } }
+        }
+      },
+      "additionalProperties": false,
+      "x-taplo": { "initKeys": ["python_interpreter", "scan_paths"] }
+    }
+  },
+  "additionalProperties": false
+}
