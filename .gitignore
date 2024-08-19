@@ -8,4 +8,4 @@ node_modules/
 *.vsix
 out/
 .pypirc
-/_version.py
+**/_version.py
