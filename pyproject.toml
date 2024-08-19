@@ -38,7 +38,7 @@ requires = ["hatch-vcs", "hatchling"]
 
 [tool.hatch.build]
 exclude = ["polar_patch/test_plugin.py"]
-include = ["*.j2"]
+include = ["*.j2", "polar_patch/*.py"]
 
 [tool.hatch.version]
 source = "vcs"
