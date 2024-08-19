@@ -1,6 +1,6 @@
 node_modules
 .venv
-src/
+polar_patch/
 tests/
 .editorconfig
 .gitignore

@@ -4,4 +4,4 @@ public
 .eslintignore
 .prettierignore
 .dockerignore
-./src
+./polar_patch

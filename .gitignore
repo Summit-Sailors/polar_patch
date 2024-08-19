@@ -3,3 +3,8 @@ __pycache__/
 build/
 dist/
 node_modules/
+*.lock
+*lock.yml
+*.vsix
+out/
+.pypirc

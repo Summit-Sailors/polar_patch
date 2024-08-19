@@ -3,10 +3,10 @@
   "pythonPlatform": "Linux",
 
   "exclude": ["**/node_modules", "**/__pycache__", "./apps", "./packages"],
-  "include": ["src"],
+  "include": ["polar_patch"],
   "typeCheckingMode": "strict",
   "reportTypesImportCycles": "error",
-  "extraPaths": ["src", "src/typings"],
+  "extraPaths": ["polar_patch", "polar_patch/typings"],
   "verboseOutput": true,
   "autoSearchPaths": true,
   "useLibraryCodeForTypes": true,

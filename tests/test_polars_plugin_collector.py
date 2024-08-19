@@ -6,7 +6,7 @@ from hypothesis import (
   strategies as st,
 )
 
-from src.plugin_scanner import PluginInfoDC, PolarsPluginCollector
+from polar_patch.plugin_scanner import PluginInfoDC, PolarsPluginCollector
 
 identifier = st.from_regex(r"[a-zA-Z_][a-zA-Z0-9_]*", fullmatch=True)
 file_path_strategy = st.builds(lambda parts: str(Path(*parts)), st.lists(identifier, min_size=1, max_size=5))
