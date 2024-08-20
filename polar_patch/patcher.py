@@ -29,7 +29,11 @@ class PolarsPatcher(MatcherDecoratableTransformer):
     polars_module = importlib.import_module("polars")
     for ns in self.polars_namespace_to_plugins:
       file_path = Path(inspect.getfile(getattr(polars_module, ns)))
-      new_code = cst.parse_module(file_path.read_text()).visit(self).code
+      backup_path = file_path.with_suffix(".bak")
+      source_code = file_path.with_suffix(".bak" if backup_path.is_file() else ".py").read_text()
+      if not backup_path.is_file():
+        backup_path.write_text(source_code)
+      new_code = cst.parse_module(source_code).visit(self).code
       file_path.write_text(new_code)
 
   @m.leave(m.ClassDef(name=m.Name(value=m.MatchIfTrue(lambda name: name in POLARS_NAMESPACES))))
