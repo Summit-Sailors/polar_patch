@@ -16,11 +16,52 @@ With this package, developers can:
 
 ## How does it work?
 
-Polar Patch uses libCST to extract info about your plugin. It then adds the appropriate attribute with type hint onto the correcsponding polars class in the site-packages of the interpreter running the command. The corresponding import is inserted into a type checking block to avoid circular dep issues. It is important to note that while this is minimally invasive, it is monkey patching your interpreters polars package. PP creates a backup copy of the polars file being patched. and each call of PP starts with a fresh copy of the backup. Unmount just copys the backup code back and removes the backup file.
+1. PP parses your polar_patch.toml
+2. scans files and folders you listed in ur toml
+3. uses [libCST](https://libcst.readthedocs.io/en/latest/) to extract the needed info about your plugins.
+4. creates a backup of the files to be modified
+5. creates a copy of the backup fresh each run
+6. applies the libCST transformer to add the attribute with type hint onto the corresponding Polars class
+7. adds the corresponding import for your plugin into polars in a type checking block
 
 ![Added Attribute](images/attr_type_hint_added.png)
 
 ![Added Import](images/attr_type_hint_import.png)
+
+## Notes
+
+- It is important to note that while this is minimally invasive, it is monkey patching the executing interpreters polars package.
+- libCST uses concrete syntax trees, thus the polars file is well preserved.
+
+## Beta Blockers
+
+- callable form of `pl.api`
+- inital functional hypothesis testing setup
+- basic logging
+- basic exception handling
+- unpin 3.12.4 to ^3.12
+
+## Stable Blockers
+
+- some maturity
+- The blessing of the polars team for the approach on [issue](https://github.com/pola-rs/polars/issues/14475)
+
+## Features
+
+- automatic "hot reloading" since the type hint points directly to the implementation
+
+## In development
+
+- vsc extension for toml support via jsonschema
+
+## Roadmap
+
+- registering third party plugins in polar_patch.toml
+- plugin store
+
+## End Goal
+
+An end-to-end framework for taking rust and/or python code into polars in python.
 
 ## Status
 
