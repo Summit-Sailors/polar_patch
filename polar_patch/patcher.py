@@ -10,7 +10,7 @@ import libcst.matchers as m
 from jinja2 import Template
 from libcst.matchers import MatcherDecoratableTransformer
 
-from polar_patch.scanner import PluginInfoDC
+from polar_patch.collector import PluginInfoDC
 from polar_patch.polars_classes import POLARS_NAMESPACES
 
 logger = logging.getLogger(__name__)

@@ -41,10 +41,9 @@ semaphore = asyncio.Semaphore(32)
 
 
 class PolarsPluginCollector(m.MatcherDecoratableVisitor):
-  def __init__(self, root_dir: "Path") -> None:
+  def __init__(self) -> None:
     super().__init__()
     self.plugins = list[PluginInfoDC]()
-    self.root_dir = root_dir
     self.tg = asyncio.TaskGroup()
 
   async def process_file(self, path: "Path") -> None:
