@@ -1,26 +1,21 @@
 import asyncio
 import logging
-from typing import TYPE_CHECKING, Iterable
-from dataclasses import dataclass
+import importlib
+import importlib.util
+import importlib.metadata
+from typing import Any, Iterable, Generator
+from pathlib import Path
+from itertools import chain
 
+import toml
 import libcst as cst
 import aiofiles
 import libcst.matchers as m
-
-from polar_patch.polars_classes import POLARS_NAMESPACE_DECORATORS, POLARS_NAMESPACE_TO_DECORATOR
-
-if TYPE_CHECKING:
-  from pathlib import Path
+from models.plugin import PluginInfoSM
+from schemas.toml_schema import Config
+from schemas.polars_classes import POLARS_NAMESPACE_DECORATORS, POLARS_NAMESPACE_TO_DECORATOR
 
 logger = logging.getLogger(__name__)
-
-
-@dataclass(frozen=True, slots=True)
-class PluginInfoDC:
-  modname: str
-  polars_namespace: str
-  namespace: str
-  cls_name: str
 
 
 MATCH_POLARS_PLUGIN_DECORATOR = m.ClassDef(
@@ -40,10 +35,19 @@ MATCH_POLARS_PLUGIN_DECORATOR = m.ClassDef(
 semaphore = asyncio.Semaphore(32)
 
 
+def yield_all_polar_patch_paths() -> Generator[Path, Any, None]:
+  yield from Config(**toml.loads(Path.cwd().read_text())).polar_patch.include
+  yield from chain.from_iterable(
+    Config(**toml.loads(patch_file.read_text())).polar_patch.include
+    for dist in filter(lambda dist: "polar-patch" in (dist.requires or []), importlib.metadata.distributions())
+    if ((spec := importlib.util.find_spec(dist.metadata["Name"])) and spec.origin and (patch_file := Path(spec.origin).with_name("polar_patch.toml")).exists())
+  )
+
+
 class PolarsPluginCollector(m.MatcherDecoratableVisitor):
   def __init__(self) -> None:
     super().__init__()
-    self.plugins = list[PluginInfoDC]()
+    self.plugins = set[PluginInfoSM]()
     self.tg = asyncio.TaskGroup()
 
   async def process_file(self, path: "Path") -> None:
@@ -59,9 +63,9 @@ class PolarsPluginCollector(m.MatcherDecoratableVisitor):
       elif path.is_dir():
         self.tg.create_task(self.task_creation_loop(path.rglob("*.py")))
 
-  async def scan_directory(self, scan_paths: Iterable["Path"]) -> None:
+  async def collect(self) -> None:
     async with self.tg:
-      self.tg.create_task(self.task_creation_loop(scan_paths))
+      self.tg.create_task(self.task_creation_loop(yield_all_polar_patch_paths()))
 
   @m.call_if_inside(MATCH_POLARS_PLUGIN_DECORATOR)
   @m.leave(m.ClassDef())
@@ -74,8 +78,8 @@ class PolarsPluginCollector(m.MatcherDecoratableVisitor):
             args=[cst.Arg(value=cst.SimpleString(namespace_name))],
           )
         ) if attr_name in POLARS_NAMESPACE_DECORATORS:
-          self.plugins.append(
-            PluginInfoDC(
+          self.plugins.add(
+            PluginInfoSM(
               cls_name=original_node.name.value,
               polars_namespace=POLARS_NAMESPACE_TO_DECORATOR[attr_name],
               modname=self.current_module,

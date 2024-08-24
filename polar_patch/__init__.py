@@ -1,17 +1,20 @@
 import inspect
 import importlib
-from typing import TYPE_CHECKING
+import importlib.util
+import importlib.metadata
+from typing import TYPE_CHECKING, Any, Generator
 from pathlib import Path
+from itertools import chain
 
 import toml
+from schemas.toml_schema import Config
+from schemas.polars_classes import POLARS_NAMESPACES
 
-from polar_patch.patcher import PolarsPatcher
-from polar_patch.collector import PolarsPluginCollector
-from polar_patch.toml_schema import Config
-from polar_patch.polars_classes import POLARS_NAMESPACES
+from polar_patch.ast.patcher import PolarsPatcher
+from polar_patch.ast.collector import PolarsPluginCollector
 
 if TYPE_CHECKING:
-  from toml_schema import PolarPatchConfig
+  from schemas.toml_schema import PolarPatchConfig
 
 
 def get_pp_toml() -> "PolarPatchConfig":
@@ -20,9 +23,8 @@ def get_pp_toml() -> "PolarPatchConfig":
 
 async def mount_plugins() -> None:
   plugin_collector = PolarsPluginCollector()
-  toml_cfg = get_pp_toml()
-  await plugin_collector.scan_directory(toml_cfg.scan_paths)
-  pp = PolarsPatcher(set(plugin_collector.plugins))
+  await plugin_collector.collect()
+  pp = PolarsPatcher(plugin_collector.plugins)
   pp.run_patcher()
 
 
