@@ -1,90 +1,105 @@
-import inspect
 import logging
-import importlib.util
-from typing import Sequence, cast
+from typing import TYPE_CHECKING, Sequence, cast
 from pathlib import Path
-from collections import defaultdict
 
 import libcst as cst
 import libcst.matchers as m
 from jinja2 import Template
-from models.plugin import PluginInfoSM
+from libcst import BaseMetadataProvider
 from libcst.matchers import MatcherDecoratableTransformer
-from schemas.polars_classes import POLARS_NAMESPACES
+from libcst.metadata import BatchableMetadataProvider
+
+from polar_patch.schemas.polars_classes import POLARS_NAMESPACES
+
+if TYPE_CHECKING:
+  from polar_patch.models.plugin import PluginLockDC
 
 logger = logging.getLogger(__name__)
 
 template = Template(Path(__file__).parent.parent.joinpath("templates/plugin_imports.py.j2").read_text())
 
 
-class PolarsPatcher(MatcherDecoratableTransformer):
-  def __init__(self, plugins: set["PluginInfoSM"]) -> None:
+class PolarsClassProvider(BatchableMetadataProvider[BaseMetadataProvider[str]]):
+  def __init__(self) -> None:
+    logger.info("Finding Polars Class in file")
     super().__init__()
-    self.polars_namespace_to_plugins = defaultdict[str, list[PluginInfoSM]](list)
-    for plugin in plugins:
-      self.polars_namespace_to_plugins[plugin.polars_namespace].append(plugin)
+    self.polars_namespace = None
 
-  def run_patcher(self) -> None:
-    polars_module = importlib.import_module("polars")
-    for ns in self.polars_namespace_to_plugins:
-      file_path = Path(inspect.getfile(getattr(polars_module, ns)))
-      backup_path = file_path.with_suffix(".bak")
-      source_code = file_path.with_suffix(".bak" if backup_path.is_file() else ".py").read_text()
-      if not backup_path.is_file():
-        backup_path.write_text(source_code)
-      new_code = cst.parse_module(source_code).visit(self).code
-      file_path.write_text(new_code)
-
-  @m.call_if_inside(m.ClassDef(name=m.Name(value=m.MatchIfTrue(lambda name: name in POLARS_NAMESPACES))))
-  @m.visit(m.ClassDef())
   def visit_ClassDef(self, node: cst.ClassDef) -> None:
-    if node.body.body and isinstance(node.body.body[0], (cst.SimpleStatementLine, cst.Expr)):
-      first_stmt = node.body.body[0]
-      if (isinstance(first_stmt, cst.SimpleStatementLine) and m.matches(first_stmt.body[0], m.Expr(value=m.SimpleString()))) or (
-        isinstance(first_stmt, cst.Expr) and m.matches(first_stmt.value, m.SimpleString())
-      ):
-        self.has_leading_docstring_or_comment = True
+    if m.matches(node, m.ClassDef(name=m.Name(value=m.MatchIfTrue(lambda name: name in POLARS_NAMESPACES)))):
+      self.polars_namespace = node.name.value
+
+  def leave_Module(self, original_node: cst.Module) -> None:
+    self.set_metadata(original_node, self.polars_namespace)
+
+
+class IfTypeCheckingProvider(BatchableMetadataProvider[BaseMetadataProvider[bool]]):
+  def __init__(self) -> None:
+    logger.info("Finding `if TYPE_CHECKING:` block in file")
+    super().__init__()
+    self.has_type_checking_block = False
+
+  def visit_If(self, node: cst.If) -> None:
+    if m.matches(node, m.If(test=m.Name("TYPE_CHECKING"))):
+      self.has_type_checking_block = True
+
+  def leave_Module(self, original_node: cst.Module) -> None:
+    self.set_metadata(original_node, self.has_type_checking_block)
+
+
+class PolarsPatcher(MatcherDecoratableTransformer):
+  METADATA_DEPENDENCIES = (PolarsClassProvider, IfTypeCheckingProvider)
+
+  def __init__(self, polars_namespace_to_plugins: dict[str, list["PluginLockDC"]]) -> None:
+    super().__init__()
+    self.polars_namespace_to_plugins = polars_namespace_to_plugins
+
+  def visit_Module(self, node: cst.Module) -> None:
+    self.has_type_checking_block = bool(self.get_metadata(IfTypeCheckingProvider, node, None))
+    self.has_added_imports = False
+    self.polars_namespace = str(self.get_metadata(PolarsClassProvider, node, None))
 
   @m.leave(m.ClassDef(name=m.Name(value=m.MatchIfTrue(lambda name: name in POLARS_NAMESPACES))))
-  def leave_ClassDef(self, original_node: cst.ClassDef, updated_node: cst.ClassDef) -> cst.ClassDef:
-    self.polars_namespace = original_node.name.value
-    new_attributes = [
-      cst.SimpleStatementLine(
-        body=[
-          cst.AnnAssign(target=cst.Name(plugin.namespace), annotation=cst.Annotation(cst.Name(plugin.cls_name)), value=None)
-          for plugin in self.polars_namespace_to_plugins[original_node.name.value]
-        ]
-      )
-    ]
-    if self.has_leading_docstring_or_comment:
-      new_body = list(updated_node.body.body)
-      new_body = new_body[:1] + new_attributes + new_body[1:]
-    else:
-      new_body = new_attributes + list(updated_node.body.body)
-    self.has_leading_docstring_or_comment = False
+  def add_new_attrs(self, original_node: cst.ClassDef, updated_node: cst.ClassDef) -> cst.ClassDef:
+    if original_node.name.value != self.polars_namespace:
+      raise Exception("PANIC")
+    plugins = self.polars_namespace_to_plugins[self.polars_namespace]
+    plugin_nodes = list[cst.AnnAssign]()
+    for plugin in plugins:
+      logger.info(f"Adding {plugin}")
+      plugin_nodes.append(cst.AnnAssign(target=cst.Name(plugin.namespace), annotation=cst.Annotation(cst.Name(plugin.cls_name)), value=None))
+    new_body = list(updated_node.body.body)
+    new_body = new_body[:1] + [cst.SimpleStatementLine(body=plugin_nodes)] + new_body[1:]
     return updated_node.with_changes(body=cst.IndentedBlock(body=cast(Sequence[cst.BaseStatement], new_body)))
 
   @m.leave(m.If(test=m.Name("TYPE_CHECKING")))
   def add_imports_to_type_checking(self, original_node: cst.If, updated_node: cst.If) -> cst.If:
-    self.type_checking_found = True
-    return updated_node.with_changes(
-      body=updated_node.body.with_changes(
+    if not self.has_added_imports:
+      logger.info("Adding plugin imports...")
+      self.has_added_imports = True
+      return updated_node.with_changes(
+        body=updated_node.body.with_changes(
+          body=[
+            *original_node.body.body,
+            *cst.parse_module(
+              template.render(items=[(plugin.modname, plugin.cls_name) for plugin in self.polars_namespace_to_plugins[self.polars_namespace]])
+            ).body,
+          ]
+        )
+      )
+    return updated_node
+
+  @m.leave(m.Module())
+  def add_imports_at_end(self, original_node: cst.Module, updated_node: cst.Module) -> cst.Module:
+    if not self.has_type_checking_block:
+      logger.info("Adding plugin imports...")
+      return updated_node.with_changes(
         body=[
-          *original_node.body.body,
+          *original_node.body,
+          cst.parse_expression("from typing import TYPE_CHECKING"),
           *cst.parse_module(
-            template.render(items=[(plugin.modname, plugin.cls_name) for plugin in self.polars_namespace_to_plugins[self.polars_namespace]])
+            template.render(items=[(plugin.modname, plugin.cls_name) for plugin in self.polars_namespace_to_plugins[self.polars_namespace]]),
           ).body,
         ]
       )
-    )
-
-  @m.leave(m.Module())
-  def add_imports(self, original_node: cst.Module, updated_node: cst.Module) -> cst.Module:
-    return updated_node.with_changes(
-      body=[
-        *original_node.body,
-        *cst.parse_module(
-          template.render(items=[(plugin.modname, plugin.cls_name) for plugin in self.polars_namespace_to_plugins[self.polars_namespace]]),
-        ).body,
-      ]
-    )
+    return updated_node

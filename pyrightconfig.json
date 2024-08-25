@@ -6,7 +6,7 @@
   "include": ["polar_patch"],
   "typeCheckingMode": "strict",
   "reportTypesImportCycles": "error",
-  "extraPaths": ["polar_patch", "polar_patch/typings"],
+  "extraPaths": [],
   "verboseOutput": true,
   "autoSearchPaths": true,
   "useLibraryCodeForTypes": true,

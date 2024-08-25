@@ -1,11 +1,12 @@
 from pathlib import Path
 
-from sqlmodel import SQLModel
+from pydantic import BaseModel
 
 
-class PolarPatchConfig(SQLModel):
+class PolarPatchConfig(BaseModel):
   include: list[Path]
+  name: str
 
 
-class Config(SQLModel):
+class Config(BaseModel):
   polar_patch: PolarPatchConfig
