@@ -8,11 +8,10 @@ def mount() -> None:
   """
   Mount your plugins type hints
   """
-  import asyncio
 
   from polar_patch import mount_plugins
 
-  asyncio.run(mount_plugins())
+  mount_plugins()
 
 
 @app.command()

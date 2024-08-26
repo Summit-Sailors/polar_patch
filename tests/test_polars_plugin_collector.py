@@ -9,7 +9,7 @@ from hypothesis import (
 from polar_patch.plugin_scanner import PluginInfoDC, PolarsPluginCollector
 
 identifier = st.from_regex(r"[a-zA-Z_][a-zA-Z0-9_]*", fullmatch=True)
-file_path_strategy = st.builds(lambda parts: str(Path(*parts)), st.lists(identifier, min_size=1, max_size=5))
+filepath_strategy = st.builds(lambda parts: str(Path(*parts)), st.lists(identifier, min_size=1, max_size=5))
 root_dir_strategy = st.builds(lambda parts: str(Path(*parts)), st.lists(identifier, min_size=1, max_size=3))
 class_name_strategy = identifier
 
@@ -34,16 +34,16 @@ class_def_strategy = st.builds(
 )
 
 
-@given(file_path=file_path_strategy, root_dir=root_dir_strategy, class_def=class_def_strategy)
-def test_polars_plugin_collector(file_path: str, root_dir: str, class_def: cst.ClassDef) -> None:
+@given(filepath=filepath_strategy, root_dir=root_dir_strategy, class_def=class_def_strategy)
+def test_polars_plugin_collector(filepath: str, root_dir: str, class_def: cst.ClassDef) -> None:
   module = cst.Module(body=[class_def])
-  collector = PolarsPluginCollector(file_path=file_path, root_dir=root_dir)
+  collector = PolarsPluginCollector(filepath=filepath, root_dir=root_dir)
   module.visit(collector)
   expected_plugins = [
     PluginInfoDC(
       cls_name=class_def.name.value,
       polars_namespace=decorator.decorator.func.attr.value,
-      modname=".".join(Path(file_path).relative_to(Path(root_dir)).with_suffix("").parts),
+      modpath=".".join(Path(filepath).relative_to(Path(root_dir)).with_suffix("").parts),
       namespace=decorator.decorator.args[0].value.value.strip('"'),
     )
     for decorator in class_def.decorators

@@ -4,7 +4,8 @@ from pydantic import BaseModel
 
 
 class PolarPatchConfig(BaseModel):
-  scan_paths: list[Path]
+  include: list[Path]
+  name: str
 
 
 class Config(BaseModel):

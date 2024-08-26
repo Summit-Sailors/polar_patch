@@ -1,2 +1,3 @@
 [polar_patch]
-scan_paths = ["polar_patch/"]
+include = ["polar_patch/"]
+name = "my_test_plugin"

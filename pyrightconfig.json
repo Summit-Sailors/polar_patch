@@ -2,11 +2,11 @@
   "pythonVersion": "3.12",
   "pythonPlatform": "Linux",
 
-  "exclude": ["**/node_modules", "**/__pycache__", "./apps", "./packages"],
+  "exclude": ["**/node_modules", "**/__pycache__"],
   "include": ["polar_patch"],
   "typeCheckingMode": "strict",
   "reportTypesImportCycles": "error",
-  "extraPaths": ["polar_patch", "polar_patch/typings"],
+  "extraPaths": [],
   "verboseOutput": true,
   "autoSearchPaths": true,
   "useLibraryCodeForTypes": true,
