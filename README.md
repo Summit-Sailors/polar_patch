@@ -49,6 +49,7 @@ With this package, developers can:
 ## Features
 
 - automatic "hot reloading" since the type hint points directly to the implementation
+- loads plugins from site-packages and generates a lockfile
 
 ## In development
 
@@ -98,3 +99,11 @@ If you need to undo the changes made by this package, simply:
 ```bash
 pp unmount
 ```
+
+---
+<a href="https://polar.sh/summitsailors/subscriptions">
+  <picture>
+    <source media="(prefers-color-scheme: dark)" srcset="https://polar.sh/embed/tiers.svg?org=summitsailors&darkmode"/>
+    <img alt="Subscription Tiers on Polar" src="https://polar.sh/embed/tiers.svg?org=summitsailors"/>
+  </picture>
+</a>

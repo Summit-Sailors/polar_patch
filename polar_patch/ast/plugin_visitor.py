@@ -42,9 +42,9 @@ class PolarsPluginVisitor(m.MatcherDecoratableVisitor):
         ) if attr_name in POLARS_NAMESPACE_DECORATORS:
           self.plugins.append(
             PluginInfoDC(
-              cls_name=original_node.name.value,
+              impl_name=original_node.name.value,
               polars_namespace=POLARS_NAMESPACE_TO_DECORATOR[attr_name],
-              namespace=namespace_name.strip('"'),
+              plugin_namespace=namespace_name.strip('"'),
             )
           )
         case _:
