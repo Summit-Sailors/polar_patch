@@ -57,7 +57,6 @@ With this package, developers can:
 
 ## Roadmap
 
-- registering third party plugins in polar_patch.toml
 - plugin store
 
 ## End Goal
@@ -81,7 +80,7 @@ To specify paths to be scanned for plugins, create a polar_patch.toml file in yo
 
 ```toml
 [polar_patch]
-scan_paths = ["path/to/your/plugin1.py", "path/to/your/polars/plugin/folder"]
+include = ["path/to/your/plugin1.py", "path/to/your/polars/plugin/folder"]
 ```
 
 ## Usage
