@@ -19,7 +19,6 @@ PP_LOCKFILE_FILENAME = "polar_patch_lock.yaml"
 
 def _process_file(path: "Path") -> set[PluginInfoPD]:
   plugin_visitor = PolarsPluginVisitor()
-  print(path)
   cst.parse_module(path.read_text()).visit(plugin_visitor)
   parts = path.with_suffix("").parts
   return {

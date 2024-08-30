@@ -1,11 +1,19 @@
 package_name: my_test_plugin
 project_plugins:
 - modpath: polar_patch.test_plugin
-  impl_name: PluginImpl
-  plugin_namespace: not_lazy_plugin_namespace
-  polars_namespace: DataFrame
-- modpath: polar_patch.test_plugin
   impl_name: LazyPluginImpl
   plugin_namespace: plugin_namespace
   polars_namespace: LazyFrame
+- modpath: polar_patch.test_func_form
+  impl_name: LazyPluginFuncFormImpl
+  plugin_namespace: plugin_namespace_func
+  polars_namespace: LazyFrame
+- modpath: polar_patch.test_plugin
+  impl_name: PluginImpl
+  plugin_namespace: not_lazy_plugin_namespace
+  polars_namespace: DataFrame
+- modpath: polar_patch.test_func_form
+  impl_name: PluginFuncFormImpl
+  plugin_namespace: not_lazy_plugin_namespace_func
+  polars_namespace: DataFrame
 site_plugins: []

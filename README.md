@@ -24,9 +24,11 @@ With this package, developers can:
 6. applies the libCST transformer to add the attribute with type hint onto the corresponding Polars class
 7. adds the corresponding import for your plugin into polars in a type checking block
 
-![Added Attribute](images/attr_type_hint_added.png)
+![Lockfile](images/lockfile.png)
 
 ![Added Import](images/attr_type_hint_import.png)
+
+![Added Attribute](images/attr_type_hint_added.png)
 
 ## Notes
 
@@ -35,9 +37,10 @@ With this package, developers can:
 
 ## Beta Blockers
 
-- callable form of `pl.api`
+- ~~callable form of `pl.api`~~
+- ~~install plugins from site-packages~~
+- ~~basic logging~~
 - inital functional hypothesis testing setup
-- basic logging
 - basic exception handling
 - unpin 3.12.4 to ^3.12
 
@@ -55,17 +58,9 @@ With this package, developers can:
 
 - vsc extension for toml support via jsonschema
 
-## Roadmap
-
-- plugin store
-
-## End Goal
-
-An end-to-end framework for taking rust and/or python code into polars in python.
-
 ## Status
 
-This package is currently in alpha and ideas are welcome. Only classes registered with the `@pl.api` decorator are currently supported. Lack of support for the callable form of `pl.api` is seen as a blocker for a beta release. Also, many edge cases have not been addressed. This is another blocker for a beta release. There is bare minimum direct testing. Thorough testing is a blocker for a stable release. only python 3.12.4 is supported atm.
+This package is currently in alpha and ideas are welcome. ~~Only classes registered with the `@pl.api` decorator are currently supported. Lack of support for the callable form of `pl.api` is seen as a blocker for a beta release.~~ Also, many edge cases have not been addressed. This is another blocker for a beta release. There is bare minimum direct testing. Thorough testing is a blocker for a stable release. only python 3.12.4 is supported atm.
 
 ## Installation
 

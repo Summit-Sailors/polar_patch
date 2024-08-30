@@ -17,6 +17,7 @@ from polar_patch.schemas.polars_classes import POLARS_NAMESPACES
 if TYPE_CHECKING:
   from polar_patch.schemas.toml_schema import PolarPatchConfig
 
+logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
 
