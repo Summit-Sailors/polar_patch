@@ -19,10 +19,11 @@ With this package, developers can:
 1. PP parses your polar_patch.toml
 2. scans files and folders you listed in ur toml
 3. uses [libCST](https://libcst.readthedocs.io/en/latest/) to extract the needed info about your plugins.
-4. creates a backup of the files to be modified
-5. uses a copy of the backup fresh each run
-6. applies the libCST transformer to add the attribute with type hint onto the corresponding Polars class
-7. adds the corresponding import for your plugin into polars in a type checking block
+4. generates a lockfile for all the plugin data it extracted
+5. creates a backup of the files to be modified
+6. uses a copy of the backup fresh each run
+7. applies the libCST transformer to add the attribute with type hint onto the corresponding Polars class
+8. adds the corresponding import for your plugin into polars in a type checking block
 
 ![Lockfile](images/lockfile.png)
 
