@@ -5,7 +5,7 @@ description = "A tool that brings type safety and type checking enhancements to 
 dynamic = ["version"]
 name = "polar_patch"
 readme = "README.md"
-requires-python = "== 3.12.4"
+requires-python = ">=3.12,<3.13"
 
 
 [tool.rye]
